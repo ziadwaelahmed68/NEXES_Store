@@ -1,0 +1,13 @@
+version: 2
+updates:
+  # فحص أدوات GitHub Actions نفسها
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      
+  # فحص مكتبات الكود (غيّر 'pip' إلى 'npm' لو مشروعك Node.js)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "daily"
