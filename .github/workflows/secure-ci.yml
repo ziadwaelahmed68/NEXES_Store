@@ -1,0 +1,49 @@
+name: Secure CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # 1. Secrets Scanning (منع تسريب المفاتيح)
+  secrets-scan:
+    name: Scan for Hardcoded Secrets
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: TruffleHog Scan
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          head: HEAD
+          extra_args: --only-verified
+
+  # 2. SAST (تحليل الكود لاكتشاف الثغرات)
+  codeql-sast:
+    name: CodeQL Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          # غير 'python' للغة المشروع بتاعك لو بتستخدم لغة تانية زي javascript أو java
+          languages: 'python' 
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v3
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
