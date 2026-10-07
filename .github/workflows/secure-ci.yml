@@ -40,7 +40,7 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           # غير 'python' للغة المشروع بتاعك لو بتستخدم لغة تانية زي javascript أو java
-          languages: 'python' 
+          languages: 'javascript,typescript,html' 
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
